@@ -1,22 +1,35 @@
 ﻿public static class Dominoes
 {
-    public static bool CanChain(IEnumerable<(int N1, int N2)> dominoes)
+    public static bool CanChain(IEnumerable<(int, int)> dominoes)
     {
-        dominoes = dominoes.OrderBy(x => x.N1 + x.N2);
+        if (dominoes.Any())
+            return CanChain(dominoes.ToArray().AsSpan());
+        else
+            return true;
 
-        List<(int, int)> chain = new()
+        static bool CanChain(Span<(int DotCount1, int DotCount2)> dominoes)
         {
-            dominoes.First()
-        };
-
-        foreach (var domino in dominoes)
-        {
-            if (domino.Item1 == chain[chain.Count - 1].Item2)
+            var firstDominoFace = dominoes[0];
+            if (dominoes.Length == 1)
             {
-                chain.Add(domino);
+                return firstDominoFace.DotCount1 == firstDominoFace.DotCount2;
             }
+            for (int i = 1; i < dominoes.Length; ++i)
+            {
+                var currentDominoFace = dominoes[i];
+                if (currentDominoFace.DotCount1 == firstDominoFace.DotCount1)
+                {
+                    dominoes[i].DotCount1 = firstDominoFace.DotCount2;
+                    if (CanChain(dominoes.Slice(start: 1))) return true;
+                }
+                if (currentDominoFace.DotCount1 == firstDominoFace.DotCount2)
+                {
+                    dominoes[i].DotCount1 = firstDominoFace.DotCount1;
+                    if (CanChain(dominoes.Slice(start: 1))) return true;
+                }
+                dominoes[i].DotCount1 = currentDominoFace.DotCount1;
+            }
+            return false;
         }
-
-        return chain.Count == dominoes.Count();
     }
 }
