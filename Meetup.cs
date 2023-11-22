@@ -63,7 +63,7 @@
         {
             date = date.AddDays(7);
             if (date.Month != _month || date.DayOfWeek != dayOfWeek)
-                return default(DateTime); // Return default value if count is not achieved in the current month
+                return default;
             currentCount++;
         }
         return date;
