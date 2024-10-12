@@ -1,4 +1,5 @@
-﻿using ConsoleDump;
+﻿using System.Text;
 
-var initialValue = 9109211;
-(TelemetryBuffer.FromBuffer(TelemetryBuffer.ToBuffer(initialValue)) == initialValue).Dump();
+using ConsoleDump;
+
+LogLine.ParseLogLevel("[902]").Dump();
